@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import Abhistorelogo from "../../assets/images/abhistorelight.png";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const SignUp = () => {
   // ============= Initial State Start here =============
@@ -24,8 +27,21 @@ const SignUp = () => {
   const [errCity, setErrCity] = useState("");
   const [errCountry, setErrCountry] = useState("");
   const [errZip, setErrZip] = useState("");
+  
   // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
+  // ============= Navigate submit button ===============
+  const navigate = useNavigate()
+  // ============= Submit Handler Start here ============
+const handleSubmit = (e) => {
+  e.preventDefault()
+  // console.log({clientName, email, phone, password, address, city, country, zip})
+  axios.post('http://localhost:3001/signup',{clientName, email, phone, password, address, city, country, zip})
+  .then(result => {console.log(result)
+  navigate('/signin')
+})
+  .catch(err=> console.log(err))
+}
   // ============= Event Handler Start here =============
   const handleName = (e) => {
     setClientName(e.target.value);
@@ -210,7 +226,9 @@ const SignUp = () => {
             </Link>
           </div>
         ) : (
-          <form className="w-full lgl:w-[500px] h-screen flex items-center justify-center">
+          <form 
+          className="w-full lgl:w-[500px] h-screen flex items-center justify-center"
+          onSubmit={handleSubmit}>
             <div className="px-6 py-4 w-full h-[96%] flex flex-col justify-start overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-2xl mdl:text-3xl mb-4">
                 Create your account
@@ -382,7 +400,7 @@ const SignUp = () => {
                   </p>
                 </div>
                 <button
-                  onClick={handleSignUp}
+                  // onClick={handleSignUp}
                   className={`${
                     checked
                       ? "bg-primeColor hover:bg-black hover:text-white cursor-pointer"

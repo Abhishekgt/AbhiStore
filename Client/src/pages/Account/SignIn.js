@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import Abhistorelogo from "../../assets/images/abhistorelight.png";
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   // ============= Initial State Start here =============
@@ -13,7 +15,24 @@ const SignIn = () => {
   const [errPassword, setErrPassword] = useState("");
 
   // ============= Error Msg End here ===================
+  
+   
   const [successMsg, setSuccessMsg] = useState("");
+  // ============= useNavigate ==========================
+  const navigate = useNavigate()
+
+   // ============= Submit Handler Start here ============
+const handleSubmit = (e) => {
+  e.preventDefault()
+  // console.log({email, password})
+  axios.post('http://localhost:3001/signin',{email, password})
+  .then(result => {
+    console.log(result)
+    if(result.data === "Success"){
+      navigate('/')
+    }
+  })
+  .catch(err=> console.log(err))}
   // ============= Event Handler Start here =============
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -24,25 +43,25 @@ const SignIn = () => {
     setErrPassword("");
   };
   // ============= Event Handler End here ===============
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  // const handleSignUp = (e) => {
+  //   e.preventDefault();
 
-    if (!email) {
-      setErrEmail("Enter your email");
-    }
+  //   if (!email) {
+  //     setErrEmail("Enter your email");
+  //   }
 
-    if (!password) {
-      setErrPassword("Create a password");
-    }
-    // ============== Getting the value ==============
-    if (email && password) {
-      setSuccessMsg(
-        `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-      );
-      setEmail("");
-      setPassword("");
-    }
-  };
+  //   if (!password) {
+  //     setErrPassword("Create a password");
+  //   }
+  //   // ============== Getting the value ==============
+  //   if (email && password) {
+  //     setSuccessMsg(
+  //       `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
+  //     );
+  //     setEmail("");
+  //     setPassword("");
+  //   }
+  // };
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
@@ -126,7 +145,8 @@ const SignIn = () => {
             </Link>
           </div>
         ) : (
-          <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center">
+          <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center"
+          onSubmit={handleSubmit}>
             <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
                 Sign in
@@ -173,7 +193,7 @@ const SignIn = () => {
                 </div>
 
                 <button
-                  onClick={handleSignUp}
+                  // onClick={handleSignUp}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                 >
                   Sign In
@@ -194,5 +214,6 @@ const SignIn = () => {
     </div>
   );
 };
+
 
 export default SignIn;
